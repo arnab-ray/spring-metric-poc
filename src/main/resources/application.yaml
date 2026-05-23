@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: spring-metric-poc
+  profiles:
+    active: local
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.session.SessionAutoConfiguration
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:26257/jpa_batch_poc?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&currentSchema=public&sslmode=disable&reWriteBatchedInserts=true
+    username: root
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    openInView: false
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming.physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+      generate_statistics: true
+      format_sql: true
+    properties:
+      hibernate.cache.user_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: true
+      org.hibernate.envers.audit_table_suffix: _history
+      hibernate.jdbc.time_zone: Asia/Kolkata
+      hibernate.jdbc.batch_size: 4
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+      hibernate.batch_versioned_data: true
+      hibernate.format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    export:
+      prometheus:
+        enabled: true

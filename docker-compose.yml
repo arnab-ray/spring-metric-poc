@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: spring-metric-postgres
+    environment:
+      POSTGRES_DB: jpa_batch_poc
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d jpa_batch_poc"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-metric-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/jpa_batch_poc?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&currentSchema=public&sslmode=disable&reWriteBatchedInserts=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
