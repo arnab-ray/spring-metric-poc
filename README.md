@@ -68,7 +68,7 @@ curl -X POST http://localhost:8080/users \
   -d '{"name": "John Doe", "email": "john@example.com"}'
 ```
 
-### View the `user.add` metric in Prometheus format
+### View the `user_add` metric in Prometheus format
 
 ```bash
 curl http://localhost:8080/actuator/prometheus | grep user_add
