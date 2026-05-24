@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @MeasureLatency("user.add")
+    @MeasureLatency("user_add")
     @SneakyThrows
     public CreateUserResponse addUser(String name, String email) {
         Optional<User> user = userRepository.findByEmail(email);
